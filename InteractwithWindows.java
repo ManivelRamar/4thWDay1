@@ -18,7 +18,8 @@ public class InteractwithWindows
 		ChromeDriver driver = new ChromeDriver();
 		driver.manage().window().maximize();
 		driver.get("http://www.leafground.com/pages/Window.html");
-		System.out.println("Current title "+driver.getTitle());
+		System.out.println("Parent window title- "+driver.getTitle());
+		String parentWindow = driver.getWindowHandle();
 		
 		driver.findElement(By.id("home")).click();
 		
@@ -26,23 +27,32 @@ public class InteractwithWindows
 		List<String> winList = new ArrayList<String>(window);
 		
 		driver.switchTo().window(winList.get(1));
-		System.out.println("Current title "+driver.getTitle());
 		
-		driver.switchTo().window(winList.get(0));
+		driver.findElement(By.xpath("//h5[text()='Drop down']")).click();
+		driver.close();
+		
+		driver.switchTo().window(parentWindow);
 		
 		driver.findElement(By.xpath("//button[text()='Open Multiple Windows']")).click();
 		
-		Set<String> window1 = driver.getWindowHandles();
-		List<String> winList1 = new ArrayList<String>(window1);
+		int sizeOfWindows = driver.getWindowHandles().size();
+		System.out.println("Size of windows: "+sizeOfWindows);
 		
-		driver.switchTo().window(winList1.get(2));
-		System.out.println("Current title "+driver.getTitle());
+		driver.findElement(By.id("color")).click();
 		
+		Set<String> windows1 = driver.getWindowHandles();
 		
-		driver.switchTo().window(winList1.get(1));
-		System.out.println("Current title "+driver.getTitle());
+		for (String allWindows : windows1) 
+		{
+			if(!allWindows.equals(parentWindow))
+			{
+				driver.switchTo().window(allWindows);
+				driver.close();
+			}
 		
-		driver.quit();
+		}
+		System.out.println("This program execution has successful");
 	}
 
 }
+
